@@ -1,5 +1,5 @@
 interface ButtonProps {
-  variant: "primary" | "secondary";
+  variant: "primary" | "secondary" | "danger";
   size: "sm" | "md" | "lg";
   text: string;
   onClick?: () => void;
@@ -18,6 +18,7 @@ const defaultStyles = "rounded-md px-4 py-2 onhover: cursor-pointer";
 const variantStyles = {
   primary: "bg-blue-600 hover:bg-blue-700 text-white",
   secondary: "bg-green-600 hover:bg-green-700 text-white",
+  danger: "bg-red-600 hover:bg-red-700 text-white",
 };
 
 export const Button = (props: ButtonProps) => {

@@ -3,20 +3,14 @@ declare const userModel: mongoose.Model<{
     hashpassword?: string | null;
     email?: string | null;
     username?: string | null;
-    phoneNumber?: number | null;
-    address?: string | null;
 }, {}, {}, {}, mongoose.Document<unknown, {}, {
     hashpassword?: string | null;
     email?: string | null;
     username?: string | null;
-    phoneNumber?: number | null;
-    address?: string | null;
 }, {}, mongoose.DefaultSchemaOptions> & {
     hashpassword?: string | null;
     email?: string | null;
     username?: string | null;
-    phoneNumber?: number | null;
-    address?: string | null;
 } & {
     _id: Types.ObjectId;
 } & {
@@ -25,20 +19,14 @@ declare const userModel: mongoose.Model<{
     hashpassword?: string | null;
     email?: string | null;
     username?: string | null;
-    phoneNumber?: number | null;
-    address?: string | null;
 }, mongoose.Document<unknown, {}, mongoose.FlatRecord<{
     hashpassword?: string | null;
     email?: string | null;
     username?: string | null;
-    phoneNumber?: number | null;
-    address?: string | null;
 }>, {}, mongoose.ResolveSchemaOptions<mongoose.DefaultSchemaOptions>> & mongoose.FlatRecord<{
     hashpassword?: string | null;
     email?: string | null;
     username?: string | null;
-    phoneNumber?: number | null;
-    address?: string | null;
 }> & {
     _id: Types.ObjectId;
 } & {

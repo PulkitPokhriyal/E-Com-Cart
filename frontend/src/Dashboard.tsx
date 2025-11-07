@@ -4,15 +4,20 @@ import { Input } from "./ui/Input";
 import { Button } from "./ui/Button";
 import { Card } from "./ui/Card";
 import { useProducts } from "./hooks/useProducts";
+import { AuthModal } from "./Auth";
+import { useNavigate } from "react-router-dom";
 
 function Dashboard() {
   const { getProducts, products, loading, getProductsByCategory } =
     useProducts();
+  const [modalOpen, setModalOpen] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     console.log("Dashboard mounted");
     getProducts();
   }, []);
+  const username = localStorage.getItem("username");
   return (
     <div className="mx-7 my-6">
       <div className="flex items-center justify-between">
@@ -24,8 +29,27 @@ function Dashboard() {
         </p>
         <Input placeholder="Search products" size="lg" />
         <div className="flex gap-8">
-          <Button text="Sign in" variant="primary" size="sm" />
-          <button className="onhover: cursor-pointer">
+          {username ? (
+            <div className="flex gap-4 items-center">
+              <p className="font-semibold text-xl">{username}</p>
+              <Button text="Log out" variant="danger" size="sm" />
+            </div>
+          ) : (
+            <Button
+              text="Sign in"
+              variant="primary"
+              size="sm"
+              onClick={() => {
+                setModalOpen(true);
+              }}
+            />
+          )}
+          <button
+            className="onhover: cursor-pointer"
+            onClick={() => {
+              navigate("/cartproducts");
+            }}
+          >
             <ShoppingCartIcon fontSize="large" />
           </button>
         </div>
@@ -81,6 +105,7 @@ function Dashboard() {
           </div>
         )}
       </div>
+      <AuthModal open={modalOpen} onClose={() => setModalOpen(false)} />
     </div>
   );
 }

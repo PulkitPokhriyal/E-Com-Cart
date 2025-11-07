@@ -6,8 +6,6 @@ const userSchema = new Schema({
     email: { type: String, unique: true },
     hashpassword: String,
     username: { type: String, unique: true },
-    phoneNumber: { type: Number },
-    address: { type: String },
 });
 const cartItemSchema = new Schema({
     userId: { type: Types.ObjectId, ref: "User", required: true },

@@ -11,6 +11,7 @@ interface Cardprops {
 
 export const Card = (props: Cardprops) => {
   const { productId, title, price, image, rate, count } = props;
+  const priceInRupees = Math.round(price * 80.7);
   const { addToCart } = useProducts();
   return (
     <div className="w-80 bg-white rounded-xl shadow-md hover:shadow-2xl transition-all duration-300 ease-in-out hover:scale-105 overflow-hidden">
@@ -39,12 +40,19 @@ export const Card = (props: Cardprops) => {
 
         <div className="flex items-center justify-between mt-4">
           <div className="text-2xl font-bold text-gray-900">
-            ₹{Math.round(price * 80.7)}
+            ₹{priceInRupees}
           </div>
           <button
             className="bg-blue-600 hover:bg-blue-700 hover:cursor-pointer text-white font-medium py-2 px-6 rounded-lg transition-colors duration-200 active:scale-95"
             onClick={() => {
-              addToCart({ productId, title, price, image, rate, count });
+              addToCart({
+                productId,
+                title,
+                price: priceInRupees,
+                image,
+                rate,
+                count,
+              });
             }}
           >
             Add to Cart

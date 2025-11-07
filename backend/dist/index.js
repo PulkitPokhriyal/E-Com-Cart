@@ -109,9 +109,9 @@ app.post("/api/v1/verify-otp", async (req, res) => {
     }
 });
 app.post("/api/v1/signin", async (req, res) => {
-    const { email, password } = req.body;
+    const { username, password } = req.body;
     try {
-        const user = await userModel.findOne({ email });
+        const user = await userModel.findOne({ username });
         if (!user) {
             return res.status(404).json({
                 message: "User not found",
@@ -148,6 +148,14 @@ app.post("/api/v1/addtocart", Middleware, async (req, res) => {
         const userId = req.userId;
         if (!userId) {
             return res.status(403).json({ message: "User not authenticated!" });
+        }
+        const existingItem = await cartItemModel.findOne({ userId, productId });
+        if (existingItem) {
+            existingItem.qty += 1;
+            await existingItem.save();
+            return res
+                .status(200)
+                .json({ message: "Item added to cart successfully", existingItem });
         }
         const cartItem = await cartItemModel.create({
             userId: userId,
@@ -188,17 +196,45 @@ app.delete("/api/v1/cart/:id", Middleware, async (req, res) => {
         if (!userId) {
             return res.status(403).json({ message: "User not authenticated!" });
         }
-        const id = req.params.id;
-        const deleteCartItem = await cartItemModel.deleteOne({ _id: id });
-        if (deleteCartItem.deletedCount === 0) {
-            return res.status(404).json({ message: "Content not found" });
+        const productId = req.params.id;
+        const existingItem = await cartItemModel.findOne({ userId, productId });
+        if (!existingItem) {
+            return res.status(404).json({ message: "Item not found in cart" });
         }
-        return res
-            .status(201)
-            .json({ message: "Content deleted successfully", deleteCartItem });
+        if (existingItem.qty > 1) {
+            existingItem.qty -= 1;
+            await existingItem.save();
+            return res.status(200).json({
+                message: "Quantity decreased by 1",
+            });
+        }
+        await cartItemModel.deleteOne({ userId, productId });
+        return res.status(201).json({ message: "Content deleted successfully" });
     }
     catch (e) {
         console.error("Error deleting cart item", e);
+        return res.status(500).json({ message: "Server error", e });
+    }
+});
+app.put("/api/v1/addqty/:id", Middleware, async (req, res) => {
+    try {
+        const userId = req.userId;
+        if (!userId) {
+            return res.status(403).json({ message: "User not authenticated!" });
+        }
+        const productId = req.params.id;
+        const existingItem = await cartItemModel.findOne({ userId, productId });
+        if (!existingItem) {
+            return res.status(404).json({ message: "Item not found in cart" });
+        }
+        existingItem.qty += 1;
+        await existingItem.save();
+        return res.status(200).json({
+            message: "Quantity increased by 1",
+        });
+    }
+    catch (e) {
+        console.error("Error adding quantity to cart item", e);
         return res.status(500).json({ message: "Server error", e });
     }
 });

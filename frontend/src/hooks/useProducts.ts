@@ -1,5 +1,5 @@
 import axios from "axios";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { BACKEND_URL } from "../../config";
 
 interface Productsprops {
@@ -13,6 +13,7 @@ interface Productsprops {
 
 export function useProducts() {
   const [products, setProducts] = useState([]);
+  const [cartProducts, setCartProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const getProducts = async () => {
     try {
@@ -68,11 +69,61 @@ export function useProducts() {
     }
   };
 
+  const getCartProducts = async () => {
+    try {
+      setLoading(true);
+      const response = await axios.get(BACKEND_URL + "/api/v1/cart", {
+        headers: {
+          token: localStorage.getItem("token"),
+        },
+      });
+      setCartProducts(response.data ?? []);
+    } catch (e) {
+      console.error("Error fetching Products added to Cart", e);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const deleteCartItems = async (id: number) => {
+    try {
+      await axios.delete(`${BACKEND_URL}/api/v1/cart/${id}`, {
+        headers: {
+          token: localStorage.getItem("token"),
+        },
+      });
+      console.log("Cart item deleted successfully");
+    } catch (e) {
+      console.error("Error deleting cart item", e);
+    }
+  };
+
+  const addQuantity = async (id: number) => {
+    try {
+      await axios.put(
+        `${BACKEND_URL}/api/v1/addqty/${id}`,
+        {},
+        {
+          headers: {
+            token: localStorage.getItem("token"),
+          },
+        },
+      );
+      console.log("Cart item quantity increased successfully");
+    } catch (e) {
+      console.error("Error increasing cart item quantity", e);
+    }
+  };
+
   return {
     products,
+    cartProducts,
     getProducts,
     loading,
     getProductsByCategory,
     addToCart,
+    getCartProducts,
+    deleteCartItems,
+    addQuantity,
   };
 }
