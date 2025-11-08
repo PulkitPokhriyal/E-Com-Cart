@@ -205,14 +205,11 @@ ecommerce-cart/
 5. Open a Pull Request
 
 
-## Contact
-
-
-Project Link: [https://github.com/yourusername/ecommerce-cart](https://github.com/yourusername/ecommerce-cart)
 
 ## Acknowledgments
 
 - [Fake Store API](https://fakestoreapi.com/) for product data
 - Material-UI for icons
 - Tailwind CSS for styling
+
 
