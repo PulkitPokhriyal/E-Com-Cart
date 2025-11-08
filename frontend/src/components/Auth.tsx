@@ -6,7 +6,7 @@ import * as Yup from "yup";
 import { useFormik } from "formik";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import { BACKEND_URL } from "../config.ts";
+import { BACKEND_URL } from "../../config.ts";
 
 interface AuthModalProps {
   open: boolean;

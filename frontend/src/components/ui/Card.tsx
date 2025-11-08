@@ -1,5 +1,6 @@
 import StarIcon from "@mui/icons-material/Star";
-import { useProducts } from "../hooks/useProducts";
+import { useProducts } from "../../hooks/useProducts";
+
 interface Cardprops {
   productId: number;
   title: string;
@@ -7,6 +8,7 @@ interface Cardprops {
   image: string;
   rate: number;
   count: number;
+  onAddToCart: () => void;
 }
 
 export const Card = (props: Cardprops) => {
@@ -53,6 +55,7 @@ export const Card = (props: Cardprops) => {
                 rate,
                 count,
               });
+              props.onAddToCart();
             }}
           >
             Add to Cart

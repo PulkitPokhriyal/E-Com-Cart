@@ -238,6 +238,63 @@ app.put("/api/v1/addqty/:id", Middleware, async (req, res) => {
         return res.status(500).json({ message: "Server error", e });
     }
 });
+app.post("/api/v1/checkout", Middleware, async (req, res) => {
+    const userId = req.userId;
+    const { totalAmount, totalItems } = req.body;
+    try {
+        const cartItems = await cartItemModel.find({ userId });
+        const userData = await userModel.findById(userId);
+        if (!userData) {
+            return res
+                .status(400)
+                .json({ message: "No user with that userId exist!" });
+        }
+        const { username, email } = userData;
+        if (!cartItems.length) {
+            return res.status(400).json({ message: "Cart is empty" });
+        }
+        let itemsList = "";
+        cartItems.forEach((item) => {
+            itemsList += `${item.title} x ${item.qty} = ₹${(item.price * item.qty).toFixed(2)}\n`;
+        });
+        transporter
+            .sendMail({
+            from: process.env.EMAIL_USER,
+            to: email,
+            subject: "Your Purchase Receipt - E-Com Cart",
+            text: `
+Hello ${username},
+
+Thank you for your purchase!
+
+ORDER DETAILS:
+${itemsList}
+-------------------
+Total Items: ${totalItems}
+TOTAL AMOUNT: ₹${totalAmount.toFixed(2)}
+
+Thank you for shopping with us!
+
+Best regards,
+E-Com Cart Team
+      `,
+        })
+            .then(async () => {
+            await cartItemModel.deleteMany({ userId });
+            res.status(200).json({
+                message: "Purchase successful! Receipt sent to your email.",
+            });
+        })
+            .catch((error) => {
+            console.error("Email error:", error);
+            res.status(500).json({ message: "Failed to send email" });
+        });
+    }
+    catch (error) {
+        console.error("Checkout error:", error);
+        res.status(500).json({ message: "Server error during checkout" });
+    }
+});
 async function main() {
     const mongoUri = process.env.MONGODB_STRING;
     await mongoose.connect(mongoUri);

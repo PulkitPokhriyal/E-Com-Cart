@@ -1,9 +1,8 @@
 import { useState, useEffect } from "react";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
-import { Input } from "./ui/Input";
 import { Button } from "./ui/Button";
 import { Card } from "./ui/Card";
-import { useProducts } from "./hooks/useProducts";
+import { useProducts } from "../hooks/useProducts";
 import { AuthModal } from "./Auth";
 import { useNavigate } from "react-router-dom";
 
@@ -12,27 +11,50 @@ function Dashboard() {
     useProducts();
   const [modalOpen, setModalOpen] = useState(false);
   const navigate = useNavigate();
-
+  const [toast, setToast] = useState(false);
   useEffect(() => {
     console.log("Dashboard mounted");
     getProducts();
   }, []);
+  const showToast = () => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      setToast(true);
+    } else {
+      setModalOpen(true);
+    }
+    setTimeout(() => {
+      setToast(false);
+    }, 3000);
+  };
   const username = localStorage.getItem("username");
   return (
     <div className="mx-7 my-6">
       <div className="flex items-center justify-between">
         <p
-          className="text-3xl font-bold onhover: cursor-pointer"
+          className="md:text-3xl text-xl font-bold onhover: cursor-pointer"
           onClick={() => getProducts()}
         >
           E-Com Cart
         </p>
-        <Input placeholder="Search products" size="lg" />
         <div className="flex gap-8">
           {username ? (
-            <div className="flex gap-4 items-center">
-              <p className="font-semibold text-xl">{username}</p>
-              <Button text="Log out" variant="danger" size="sm" />
+            <div className="flex gap-6 items-center">
+              <p className="font-semibold md:text-xl text-sm">{username}</p>
+              <Button
+                text="Log out"
+                variant="danger"
+                size="sm"
+                onClick={() => {
+                  const confirmLogout = window.confirm(
+                    "Are you sure you want to logout?",
+                  );
+                  if (confirmLogout) {
+                    localStorage.clear();
+                    navigate("/");
+                  }
+                }}
+              />
             </div>
           ) : (
             <Button
@@ -100,8 +122,14 @@ function Dashboard() {
                 image={image}
                 rate={rating.rate}
                 count={rating.count}
+                onAddToCart={showToast}
               />
             ))}
+          </div>
+        )}
+        {toast && (
+          <div className="fixed bottom-10 left-1/2 transform -translate-x-1/2 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg animate-bounce">
+            Item Added to Cart
           </div>
         )}
       </div>

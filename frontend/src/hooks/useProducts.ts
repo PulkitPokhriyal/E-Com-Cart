@@ -11,6 +11,10 @@ interface Productsprops {
   count: number;
 }
 
+interface Receiptfunctionprops {
+  totalAmount: number;
+  totalItems: number;
+}
 export function useProducts() {
   const [products, setProducts] = useState([]);
   const [cartProducts, setCartProducts] = useState([]);
@@ -115,6 +119,28 @@ export function useProducts() {
     }
   };
 
+  const getReceipt = async ({
+    totalAmount,
+    totalItems,
+  }: Receiptfunctionprops) => {
+    try {
+      await axios.post(
+        `${BACKEND_URL}/api/v1/checkout`,
+        {
+          totalAmount,
+          totalItems,
+        },
+        {
+          headers: {
+            token: localStorage.getItem("token"),
+          },
+        },
+      );
+      console.log("Purchased products successfully");
+    } catch (e) {
+      console.error("Error purchasing products", e);
+    }
+  };
   return {
     products,
     cartProducts,
@@ -125,5 +151,6 @@ export function useProducts() {
     getCartProducts,
     deleteCartItems,
     addQuantity,
+    getReceipt,
   };
 }

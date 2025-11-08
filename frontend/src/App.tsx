@@ -1,11 +1,6 @@
-import Dashboard from "./Dashboard";
-import { CartProducts } from "./CartProduct";
-import {
-  BrowserRouter as Router,
-  Routes,
-  Route,
-  Navigate,
-} from "react-router-dom";
+import Dashboard from "./components/Dashboard";
+import { CartProducts } from "./components/CartProduct";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 function App() {
   return (
     <>

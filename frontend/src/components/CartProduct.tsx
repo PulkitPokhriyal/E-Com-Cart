@@ -1,5 +1,5 @@
-import { useEffect } from "react";
-import { useProducts } from "./hooks/useProducts";
+import { useEffect, useState } from "react";
+import { useProducts } from "../hooks/useProducts.ts";
 import StarIcon from "@mui/icons-material/Star";
 import AddIcon from "@mui/icons-material/Add";
 import RemoveIcon from "@mui/icons-material/Remove";
@@ -11,11 +11,14 @@ export const CartProducts = () => {
     loading,
     deleteCartItems,
     addQuantity,
+    getReceipt,
   } = useProducts();
   useEffect(() => {
     getCartProducts();
   }, []);
 
+  const [showPopup, setShowPopup] = useState(false);
+  const [buttonLoading, isButtonLoading] = useState(false);
   const handleDelete = async (id: number) => {
     await deleteCartItems(id);
     await getCartProducts();
@@ -102,9 +105,43 @@ export const CartProducts = () => {
               <p>Subtotal ({totalItems} items):</p>
               <p>₹{totalPrice}</p>
             </div>
-            <div className="text-right">
-              <Button text="Checkout" variant="secondary" size="sm" />
+            <div className="text-right pb-4">
+              {cartProducts.length && (
+                <Button
+                  text={buttonLoading ? "Checkingout...." : "Checkout"}
+                  variant="secondary"
+                  size="sm"
+                  loading={buttonLoading}
+                  onClick={async () => {
+                    isButtonLoading(true);
+                    await getReceipt({ totalAmount: totalPrice, totalItems });
+                    setShowPopup(true);
+                    await getCartProducts();
+                    isButtonLoading(false);
+                  }}
+                />
+              )}
             </div>
+            {showPopup && (
+              <div className="fixed inset-0 flex items-center justify-center z-50">
+                <div className="bg-gray-100 rounded p-6 max-w-sm text-center">
+                  <h2 className="text-xl font-semibold mb-2">
+                    Thank you for purchasing!
+                  </h2>
+                  <p className="mb-2">
+                    You will receive your receipt at your email.
+                  </p>
+                  <Button
+                    text="Close"
+                    variant="danger"
+                    size="sm"
+                    onClick={() => {
+                      setShowPopup(false);
+                    }}
+                  />{" "}
+                </div>
+              </div>
+            )}
           </div>
         )}
       </div>
