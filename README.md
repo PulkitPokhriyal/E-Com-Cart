@@ -2,6 +2,18 @@
 
 A full-stack e-commerce shopping cart application built with React, TypeScript, Node.js, Express, and MongoDB.
 
+## 🖼️ Screenshots
+
+### Home Page
+<img width="1918" height="936" alt="Screenshot_20251108_063628" src="https://github.com/user-attachments/assets/1c901b3c-6962-48fc-8557-763cafbbc6bf" />
+
+### Shopping Cart
+<img width="1920" height="934" alt="Screenshot_20251108_063655" src="https://github.com/user-attachments/assets/b1aaf9c4-1f23-4379-b162-533f1cfc005e" />
+
+### Email Receipt
+<img width="755" height="410" alt="Screenshot_20251108_064622" src="https://github.com/user-attachments/assets/523817a0-e882-42ef-8c57-9eafa87784e8" />
+
+
 ## Features
 
 - 🔐 User Authentication (Sign up, Sign in with OTP verification)
@@ -128,7 +140,8 @@ ecommerce-cart/
 │   ├── src/
 │   │   ├── index.ts          # Main server file
 │   │   ├── middleware.ts     # JWT authentication middleware
-│   │   └── db.ts             # Database models
+│   │   └── db.ts
+│   │   └── override.d.ts
 │   ├── package.json
 │   └── .env
 │
@@ -137,7 +150,6 @@ ecommerce-cart/
     │   ├── components/
     │   │   ├── Dashboard.tsx
     │   │   ├── CartProducts.tsx
-    │   │   ├── Card.tsx
     │   │   └── Auth.tsx
     │   ├── hooks/
     │   │   └── useProducts.ts
@@ -203,3 +215,4 @@ Project Link: [https://github.com/yourusername/ecommerce-cart](https://github.co
 - [Fake Store API](https://fakestoreapi.com/) for product data
 - Material-UI for icons
 - Tailwind CSS for styling
+
