@@ -81,7 +81,7 @@ app.post("/api/v1/signup", async (req, res): Promise<any> => {
     await redis.set(`otp:${email}`, otp, "EX", 300);
 
     await transporter.sendMail({
-      from: process.env.USER_EMAIL,
+      from: '"E-Com Cart" <' + process.env.EMAIL_USER + ">",
       to: email,
       subject: "Your OTP Code",
       text: `Your OTP is: ${otp}. It will expire in 5 minutes.`,
@@ -301,7 +301,7 @@ app.post("/api/v1/checkout", Middleware, async (req, res) => {
 
     transporter
       .sendMail({
-        from: process.env.EMAIL_USER,
+        from: '"E-Com Cart" <' + process.env.EMAIL_USER + ">",
         to: email as string,
         subject: "Your Purchase Receipt - E-Com Cart",
         text: `
